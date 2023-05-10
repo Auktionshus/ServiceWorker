@@ -14,10 +14,10 @@ public class Worker : BackgroundService
     public Worker(ILogger<Worker> logger, IConfiguration config)
     {
         _logger = logger;
-        _filePath = config["FilePath"] ?? "/srv";
+
         _hostName = config["HostnameRabbit"];
 
-        _logger.LogInformation($"Filepath: {_filePath}");
+
         _logger.LogInformation($"Connection: {_hostName}");
     }
 
