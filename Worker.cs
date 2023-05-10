@@ -39,7 +39,7 @@ public class Worker : BackgroundService
         channel.QueueBind(
             queue: queueName,
             exchange: "topic_fleet",
-            routingKey: "INDSÆT ROUTING KEY HER! UDFRA HVAD DER SENDES FRA CONTROLLER OG HVAD DER SKAL MODTAGES fx maintenance.*"
+            routingKey: "INDSÆT ROUTING KEY HER! UDFRA HVAD DER SENDES FRA CONTROLLER OG HVAD DER SKAL MODTAGES fx maintenance.*g"
         );
 
         var consumer = new EventingBasicConsumer(channel);
