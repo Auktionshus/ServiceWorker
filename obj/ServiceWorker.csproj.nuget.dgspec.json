@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[5.1.4, )"
             },
+            "NLog.Targets.Loki": {
+              "target": "Package",
+              "version": "[1.4.6, )"
+            },
             "NLog.Web.AspNetCore": {
               "target": "Package",
               "version": "[5.2.3, )"

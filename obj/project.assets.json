@@ -567,6 +567,18 @@
           }
         }
       },
+      "NLog.Targets.Loki/1.4.6": {
+        "type": "package",
+        "dependencies": {
+          "NLog": "4.7.15"
+        },
+        "compile": {
+          "lib/net7.0/NLog.Loki.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/NLog.Loki.dll": {}
+        }
+      },
       "NLog.Web.AspNetCore/5.2.3": {
         "type": "package",
         "dependencies": {
@@ -1498,6 +1510,22 @@
         "nlog.extensions.logging.nuspec"
       ]
     },
+    "NLog.Targets.Loki/1.4.6": {
+      "sha512": "AOfVvNR3Pw1hH1Pur0m6XYzL+BPDCbSicI2aBSFvM5wWU+JuvV9DqRZOAT5eExvTQGghdifV8TojYZn8JGcRBg==",
+      "type": "package",
+      "path": "nlog.targets.loki/1.4.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "lib/net6.0/NLog.Loki.dll",
+        "lib/net7.0/NLog.Loki.dll",
+        "lib/netstandard2.0/NLog.Loki.dll",
+        "nlog.targets.loki.1.4.6.nupkg.sha512",
+        "nlog.targets.loki.nuspec"
+      ]
+    },
     "NLog.Web.AspNetCore/5.2.3": {
       "sha512": "uP0KekbkswuMjo1dbaqu20TxH2Dc3ox2qJDIi837ob2Fq/BliZHuQY9nJdM3UArVrLrsl+xxsx0D6h8m3fOufg==",
       "type": "package",
@@ -1756,6 +1784,7 @@
     "net7.0": [
       "Microsoft.Extensions.Hosting >= 7.0.1",
       "NLog >= 5.1.4",
+      "NLog.Targets.Loki >= 1.4.6",
       "NLog.Web.AspNetCore >= 5.2.3",
       "RabbitMQ.Client >= 6.5.0"
     ]
@@ -1806,6 +1835,10 @@
           "NLog": {
             "target": "Package",
             "version": "[5.1.4, )"
+          },
+          "NLog.Targets.Loki": {
+            "target": "Package",
+            "version": "[1.4.6, )"
           },
           "NLog.Web.AspNetCore": {
             "target": "Package",

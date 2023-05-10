@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "s6fLs7CuGhvZISymFOZMhbQwMxx/eRX3lgStB2GkF6P3D2kvwtvDGKSoyc/W8SP4oiPGbuP+7VflWO2pGHA4Bg==",
+  "dgSpecHash": "GrlfQvCJeLw4jJnOIJZINwVTzU6n0PmnASjXm4vazwXTRloGmbxgsqKhYn0H+k1fBZlj20NHsTyG8MG8T5/J/w==",
   "success": true,
   "projectFilePath": "C:\\Users\\mathi\\Skol\\Skole\\It-infrastruktur-og-arkitektur\\auktion\\ServiceWorker\\ServiceWorker.csproj",
   "expectedPackageFiles": [
@@ -31,6 +31,7 @@
     "C:\\Users\\mathi\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
     "C:\\Users\\mathi\\.nuget\\packages\\nlog\\5.1.4\\nlog.5.1.4.nupkg.sha512",
     "C:\\Users\\mathi\\.nuget\\packages\\nlog.extensions.logging\\5.2.3\\nlog.extensions.logging.5.2.3.nupkg.sha512",
+    "C:\\Users\\mathi\\.nuget\\packages\\nlog.targets.loki\\1.4.6\\nlog.targets.loki.1.4.6.nupkg.sha512",
     "C:\\Users\\mathi\\.nuget\\packages\\nlog.web.aspnetcore\\5.2.3\\nlog.web.aspnetcore.5.2.3.nupkg.sha512",
     "C:\\Users\\mathi\\.nuget\\packages\\rabbitmq.client\\6.5.0\\rabbitmq.client.6.5.0.nupkg.sha512",
     "C:\\Users\\mathi\\.nuget\\packages\\system.diagnostics.diagnosticsource\\7.0.1\\system.diagnostics.diagnosticsource.7.0.1.nupkg.sha512",
