@@ -4,20 +4,21 @@ using System.Text;
 using System.Text.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using MongoDB.Driver;
 
-public class Worker : BackgroundService
+public class AuctionWorker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
+    private readonly ILogger<AuctionWorker> _logger;
     private readonly string _filePath;
     private readonly string _hostName;
 
-    public Worker(ILogger<Worker> logger, IConfiguration config)
+    private readonly string _mongoDbConnectionString =
+        "mongodb+srv://GroenOlsen:BhvQmiihJWiurl2V@auktionshusgo.yzctdhc.mongodb.net/?retryWrites=true&w=majority";
+
+    public AuctionWorker(ILogger<AuctionWorker> logger, IConfiguration config)
     {
         _logger = logger;
-
         _hostName = config["HostnameRabbit"];
-
-
         _logger.LogInformation($"Connection: {_hostName}");
     }
 
@@ -36,11 +37,7 @@ public class Worker : BackgroundService
 
         var queueName = channel.QueueDeclare().QueueName;
 
-        channel.QueueBind(
-            queue: queueName,
-            exchange: "topic_fleet",
-            routingKey: "INDSÆT ROUTING KEY HER! UDFRA HVAD DER SENDES FRA CONTROLLER OG HVAD DER SKAL MODTAGES fx maintenance.*g"
-        );
+        channel.QueueBind(queue: queueName, exchange: "topic_fleet", routingKey: "auctions.create");
 
         var consumer = new EventingBasicConsumer(channel);
 
@@ -48,6 +45,14 @@ public class Worker : BackgroundService
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
+            var dbClient = new MongoClient(_mongoDbConnectionString);
+            var collection = dbClient.GetDatabase("auction").GetCollection<Auction>("auctions");
+
+            _logger.LogInformation($" [x] Received {message}");
+
+            var auction = JsonSerializer.Deserialize<Auction>(message);
+
+            collection.InsertOneAsync(auction);
         };
 
         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);

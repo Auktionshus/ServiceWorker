@@ -5,7 +5,7 @@ using NLog.Web;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        services.AddHostedService<Worker>();
+        services.AddHostedService<AuctionWorker>();
     })
     .ConfigureLogging(logging =>
     {
