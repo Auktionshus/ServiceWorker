@@ -37,7 +37,7 @@ public class AuctionWorker : BackgroundService
 
         var queueName = channel.QueueDeclare().QueueName;
 
-        channel.QueueBind(queue: queueName, exchange: "topic_fleet", routingKey: "auction.create");
+        channel.QueueBind(queue: queueName, exchange: "topic_fleet", routingKey: "auctions.create");
 
         var consumer = new EventingBasicConsumer(channel);
 
