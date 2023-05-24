@@ -29,7 +29,7 @@ public class Auction
         decimal startingPrice,
         decimal currentPrice,
         List<Bid> bidHistory,
-        List<ImageRecord> imageHistory,
+        string ImageFileId,
         string category,
         string location
     )
@@ -43,7 +43,7 @@ public class Auction
         this.StartingPrice = startingPrice;
         this.CurrentPrice = currentPrice;
         this.BidHistory = bidHistory;
-        this.ImageHistory = imageHistory;
+        this.ImageFileId = ImageFileId;
         this.Category = category;
         this.Location = location;
     }
