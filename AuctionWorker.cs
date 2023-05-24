@@ -1,4 +1,3 @@
-namespace ServiceWorker;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -6,18 +5,19 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using MongoDB.Driver;
 
+namespace ServiceWorker;
+
 public class AuctionWorker : BackgroundService
 {
     private readonly ILogger<AuctionWorker> _logger;
-    private readonly string _filePath;
     private readonly string _hostName;
 
-    private readonly string _mongoDbConnectionString =
-        "mongodb+srv://GroenOlsen:BhvQmiihJWiurl2V@auktionshusgo.yzctdhc.mongodb.net/?retryWrites=true&w=majority";
+    private readonly string _mongoDbConnectionString;
 
     public AuctionWorker(ILogger<AuctionWorker> logger, IConfiguration config)
     {
         _logger = logger;
+        _mongoDbConnectionString = config["MongoDbConnectionString"];
         _hostName = config["HostnameRabbit"];
         _logger.LogInformation($"Connection: {_hostName}");
     }
