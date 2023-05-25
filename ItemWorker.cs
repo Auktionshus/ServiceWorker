@@ -46,7 +46,7 @@ public class ItemWorker : BackgroundService
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             var dbClient = new MongoClient(_mongoDbConnectionString);
-            var collection = dbClient.GetDatabase("Items").GetCollection<Auction>("Item");
+            var collection = dbClient.GetDatabase("Items").GetCollection<Item>("Item");
 
             _logger.LogInformation($" [x] Received {message}");
 
