@@ -2,7 +2,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
-public class ItemService 
+public class Item 
 {
     public Guid Id { get; set; }
 
