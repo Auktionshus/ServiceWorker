@@ -6,6 +6,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddHostedService<AuctionWorker>();
+        services.AddHostedService<BidWorker>();
     })
     .ConfigureLogging(logging =>
     {
