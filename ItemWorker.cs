@@ -7,14 +7,14 @@ using MongoDB.Driver;
 
 namespace ServiceWorker;
 
-public class AuctionWorker : BackgroundService
+public class ItemWorker : BackgroundService
 {
-    private readonly ILogger<AuctionWorker> _logger;
+    private readonly ILogger<ItemWorker> _logger;
     private readonly string _hostName;
 
     private readonly string _mongoDbConnectionString;
 
-    public AuctionWorker(ILogger<AuctionWorker> logger, IConfiguration config)
+    public ItemWorker(ILogger<ItemWorker> logger, IConfiguration config)
     {
         _logger = logger;
         _mongoDbConnectionString = config["MongoDbConnectionString"];
@@ -37,7 +37,7 @@ public class AuctionWorker : BackgroundService
 
         var queueName = channel.QueueDeclare().QueueName;
 
-        channel.QueueBind(queue: queueName, exchange: "topic_fleet", routingKey: "auctions.create");
+        channel.QueueBind(queue: queueName, exchange: "topic_fleet", routingKey: "items.create");
 
         var consumer = new EventingBasicConsumer(channel);
 
@@ -46,13 +46,13 @@ public class AuctionWorker : BackgroundService
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             var dbClient = new MongoClient(_mongoDbConnectionString);
-            var collection = dbClient.GetDatabase("auction").GetCollection<Auction>("auctions");
+            var collection = dbClient.GetDatabase("Items").GetCollection<Item>("Item");
 
             _logger.LogInformation($" [x] Received {message}");
 
-            var auction = JsonSerializer.Deserialize<Auction>(message);
+            var item = JsonSerializer.Deserialize<Item>(message);
 
-            collection.InsertOneAsync(auction);
+            collection.InsertOneAsync(item);
         };
 
         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
@@ -64,3 +64,4 @@ public class AuctionWorker : BackgroundService
         }
     }
 }
+

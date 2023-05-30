@@ -7,14 +7,14 @@ using MongoDB.Driver;
 
 namespace ServiceWorker;
 
-public class AuctionWorker : BackgroundService
+public class BidWorker : BackgroundService
 {
-    private readonly ILogger<AuctionWorker> _logger;
+    private readonly ILogger<BidWorker> _logger;
     private readonly string _hostName;
 
     private readonly string _mongoDbConnectionString;
 
-    public AuctionWorker(ILogger<AuctionWorker> logger, IConfiguration config)
+    public BidWorker(ILogger<BidWorker> logger, IConfiguration config)
     {
         _logger = logger;
         _mongoDbConnectionString = config["MongoDbConnectionString"];
