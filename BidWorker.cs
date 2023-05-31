@@ -90,16 +90,25 @@ public class BidWorker : BackgroundService
                     $" [x] Received bid with id: {bid.Id}, amount: {bid.Amount}, bidder: {bid.Bidder}"
                 );
 
-                auction.BidHistory.Add(bid);
-                auction.CurrentPrice = bid.Amount;
+                try
+                {
+                    auction.BidHistory.Add(bid);
+                    auction.CurrentPrice = bid.Amount;
 
-                var update = Builders<Auction>.Update
-                    .Set(a => a.CurrentPrice, bid.Amount)
-                    .Push(a => a.BidHistory, bid);
+                    var update = Builders<Auction>.Update
+                        .Set(a => a.CurrentPrice, bid.Amount)
+                        .Push(a => a.BidHistory, bid);
 
-                auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
+                    auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
 
-                bidCollection.InsertOne(bid);
+                    bidCollection.InsertOne(bid);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(
+                        $"An error occurred while performing database operations: {ex}"
+                    );
+                }
             }
             else
             {
