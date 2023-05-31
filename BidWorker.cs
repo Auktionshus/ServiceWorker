@@ -60,9 +60,17 @@ public class BidWorker : BackgroundService
 
             Auction auction = auctionCollection.Find(a => a.Id == bidDTO.Auction).FirstOrDefault();
             _logger.LogInformation($" [x] Received auction with id: {auction.Id}");
-            User user = userCollection.Find(u => u.Id == bidDTO.Bidder).FirstOrDefault();
-            _logger.LogInformation($" [x] Received user with id: {user.Id}");
 
+            User user = null;
+            try
+            {
+                user = userCollection.Find(u => u.Id == bidDTO.Bidder).FirstOrDefault();
+                _logger.LogInformation($" [x] Received user with id: {user.Id}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while querying the user collection: {ex}");
+            }
             _logger.LogInformation(
                 $" [x] Bid amount: {bidDTO.Amount}, auction current price: {auction.CurrentPrice}"
             );
