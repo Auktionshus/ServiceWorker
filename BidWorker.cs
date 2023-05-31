@@ -54,7 +54,9 @@ public class BidWorker : BackgroundService
             _logger.LogInformation($" [x] Received {message}");
 
             BidDTO? bidDTO = JsonSerializer.Deserialize<BidDTO>(message);
-            _logger.LogInformation($" [x] Received {bidDTO}");
+            _logger.LogInformation(
+                $" [x] serialized message auction: {bidDTO.Auction}, bidder: {bidDTO.Bidder}, amount: {bidDTO.Amount}"
+            );
 
             Auction auction = auctionCollection.Find(a => a.Id == bidDTO.Auction).FirstOrDefault();
             _logger.LogInformation($" [x] Received auction with id: {auction.Id}");
