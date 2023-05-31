@@ -37,7 +37,7 @@ public class BidWorker : BackgroundService
 
         var queueName = channel.QueueDeclare().QueueName;
 
-        channel.QueueBind(queue: queueName, exchange: "topic_fleet", routingKey: "auctions.create");
+        channel.QueueBind(queue: queueName, exchange: "topic_fleet", routingKey: "bids.create");
 
         var consumer = new EventingBasicConsumer(channel);
 
@@ -46,13 +46,47 @@ public class BidWorker : BackgroundService
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             var dbClient = new MongoClient(_mongoDbConnectionString);
-            var collection = dbClient.GetDatabase("auction").GetCollection<Auction>("auctions");
-
+            var auctionCollection = dbClient
+                .GetDatabase("auction")
+                .GetCollection<Auction>("auctions");
+            var userCollection = dbClient.GetDatabase("User").GetCollection<User>("Users");
+            var bidCollection = dbClient.GetDatabase("Bid").GetCollection<Bid>("Bids");
             _logger.LogInformation($" [x] Received {message}");
 
-            var auction = JsonSerializer.Deserialize<Auction>(message);
+            BidDTO? bidDTO = JsonSerializer.Deserialize<BidDTO>(message);
 
-            collection.InsertOneAsync(auction);
+            Auction auction = auctionCollection.Find(a => a.Id == bidDTO.Auction).FirstOrDefault();
+
+            User user = userCollection.Find(u => u.Id == bidDTO.Bidder).FirstOrDefault();
+
+            if (auction != null && bidDTO.Amount <= auction.CurrentPrice)
+            {
+                if (auction.BidHistory == null)
+                {
+                    auction.BidHistory = new List<Bid>();
+                }
+                Bid bid = new Bid
+                {
+                    Amount = bidDTO.Amount,
+                    Bidder = user,
+                    Id = Guid.NewGuid()
+                };
+
+                auction.BidHistory.Add(bid);
+                auction.CurrentPrice = bid.Amount;
+
+                var update = Builders<Auction>.Update
+                    .Set(a => a.CurrentPrice, bid.Amount)
+                    .Push(a => a.BidHistory, bid);
+
+                auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
+
+                bidCollection.InsertOne(bid);
+            }
+            else
+            {
+                _logger.LogInformation($"error while adding auction");
+            }
         };
 
         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);

@@ -6,9 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-ServiceWorker-4ab0e19f-f182-40db-be64-53e2f0638596</UserSecretsId>
 
-    <Company>Quick Go Taxa A/S</Company>
-    <Authors>Dit Navn</Authors>
-    <Copyright>2022 HTU Aps</Copyright>
+    <Company>Grøn og Olsen ApS</Company>
+    <Authors>3M1N</Authors>
+    <Copyright>2023 Eaaa 3M1N ApS</Copyright>
 
     <AssemblyVersion>1.0.1.1</AssemblyVersion>
     <FileVersion>1.0.1.1</FileVersion>
