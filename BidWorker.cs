@@ -63,6 +63,9 @@ public class BidWorker : BackgroundService
             User user = userCollection.Find(u => u.Id == bidDTO.Bidder).FirstOrDefault();
             _logger.LogInformation($" [x] Received user with id: {user.Id}");
 
+            _logger.LogInformation(
+                $" [x] Bid amount: {bidDTO.Amount}, auction current price: {auction.CurrentPrice}"
+            );
             if (auction != null && bidDTO.Amount > auction.CurrentPrice)
             {
                 if (auction.BidHistory == null)
