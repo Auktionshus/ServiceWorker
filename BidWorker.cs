@@ -75,6 +75,9 @@ public class BidWorker : BackgroundService
                     Bidder = user,
                     Id = Guid.NewGuid()
                 };
+                _logger.LogInformation(
+                    $" [x] Received bid with id: {bid.Id}, amount: {bid.Amount}, bidder: {bid.Bidder}"
+                );
 
                 auction.BidHistory.Add(bid);
                 auction.CurrentPrice = bid.Amount;
