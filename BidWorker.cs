@@ -59,7 +59,7 @@ public class BidWorker : BackgroundService
 
             User user = userCollection.Find(u => u.Id == bidDTO.Bidder).FirstOrDefault();
 
-            if (auction != null && bidDTO.Amount <= auction.CurrentPrice)
+            if (auction != null && bidDTO.Amount >= auction.CurrentPrice)
             {
                 if (auction.BidHistory == null)
                 {
