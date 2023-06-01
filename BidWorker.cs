@@ -58,7 +58,8 @@ public class BidWorker : BackgroundService
                 $" [x] serialized message auction: {bidDTO.Auction}, bidder: {bidDTO.Bidder}, amount: {bidDTO.Amount}"
             );
 
-            Auction auction = null;
+            Auction auction = new Auction { Bids = new List<Bid>() };
+
             try
             {
                 auction = auctionCollection.Find(a => a.Id == bidDTO.Auction).FirstOrDefault();
