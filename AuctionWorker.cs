@@ -46,18 +46,48 @@ public class AuctionWorker : BackgroundService
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             var dbClient = new MongoClient(_mongoDbConnectionString);
-            var collection = dbClient.GetDatabase("auction").GetCollection<Auction>("auctions");
+            var auctionCollection = dbClient
+                .GetDatabase("auction")
+                .GetCollection<Auction>("auctions");
+            var itemCollection = dbClient.GetDatabase("Items").GetCollection<Item>("Item");
 
             _logger.LogInformation($" [x] Received {message}");
 
-            var auction = JsonSerializer.Deserialize<Auction>(message);
+            var auctionDTO = JsonSerializer.Deserialize<AuctionDTO>(message);
+
+            Item item = null;
             try
             {
-                collection.InsertOneAsync(auction);
+                item = itemCollection.Find(i => i.Id == auctionDTO.Item).FirstOrDefault();
+                _logger.LogInformation($" [x] Received item with id: {item.Id}");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An error occurred while performing database operations: {ex}");
+                _logger.LogError($"An error occurred while querying the item collection: {ex}");
+            }
+
+            Auction auction = new Auction
+            {
+                Id = Guid.NewGuid(),
+                Item = item,
+                StartTime = auctionDTO.StartTime,
+                EndTime = auctionDTO.EndTime,
+                StartingPrice = auctionDTO.StartingPrice,
+                CurrentPrice = auctionDTO.StartingPrice,
+            };
+
+            if (item != null)
+            {
+                try
+                {
+                    auctionCollection.InsertOneAsync(auction);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(
+                        $"An error occurred while performing database operations: {ex}"
+                    );
+                }
             }
         };
 
