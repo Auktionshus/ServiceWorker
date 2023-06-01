@@ -66,9 +66,9 @@ public class AuctionWorker : BackgroundService
                 _logger.LogError($"An error occurred while querying the item collection: {ex}");
             }
 
-            Auction auciton = new Auction
+            Auction auction = new Auction
             {
-                Id = Guid.newGuid(),
+                Id = Guid.NewGuid(),
                 Item = item,
                 StartTime = auctionDTO.StartTime,
                 EndTime = auctionDTO.EndTime,
