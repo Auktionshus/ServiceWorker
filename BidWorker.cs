@@ -53,13 +53,21 @@ public class BidWorker : BackgroundService
             var bidCollection = dbClient.GetDatabase("Bid").GetCollection<Bid>("Bids");
             _logger.LogInformation($" [x] Received {message}");
 
-            BidDTO? bidDTO = JsonSerializer.Deserialize<BidDTO>(message);
+            BidDTO bidDTO = JsonSerializer.Deserialize<BidDTO>(message);
             _logger.LogInformation(
                 $" [x] serialized message auction: {bidDTO.Auction}, bidder: {bidDTO.Bidder}, amount: {bidDTO.Amount}"
             );
 
-            Auction auction = auctionCollection.Find(a => a.Id == bidDTO.Auction).FirstOrDefault();
-            _logger.LogInformation($" [x] Received auction with id: {auction.Id}");
+            Auction auction = null;
+            try
+            {
+                auction = auctionCollection.Find(a => a.Id == bidDTO.Auction).FirstOrDefault();
+                _logger.LogInformation($" [x] Received auction with id: {auction.Id}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while querying the user collection: {ex}");
+            }
 
             User user = null;
             try
@@ -71,10 +79,8 @@ public class BidWorker : BackgroundService
             {
                 _logger.LogError($"An error occurred while querying the user collection: {ex}");
             }
-            _logger.LogInformation(
-                $" [x] Bid amount: {bidDTO.Amount}, auction current price: {auction.CurrentPrice}"
-            );
-            if (auction != null && bidDTO.Amount > auction.CurrentPrice)
+
+            if (auction != null && user != null && bidDTO.Amount > auction.CurrentPrice)
             {
                 if (auction.Bids == null)
                 {
@@ -82,9 +88,10 @@ public class BidWorker : BackgroundService
                 }
                 Bid bid = new Bid
                 {
-                    Amount = bidDTO.Amount,
+                    Id = Guid.NewGuid(),
                     Bidder = user,
-                    Id = Guid.NewGuid()
+                    Amount = bidDTO.Amount,
+                    Date = DateTime.Now
                 };
                 _logger.LogInformation(
                     $" [x] Received bid with id: {bid.Id}, amount: {bid.Amount}, bidder: {bid.Bidder}"
