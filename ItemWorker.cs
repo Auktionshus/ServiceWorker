@@ -53,6 +53,17 @@ public class ItemWorker : BackgroundService
 
             var itemDTO = JsonSerializer.Deserialize<ItemDTO>(message);
 
+            User user = null;
+            try
+            {
+                user = userCollection.Find(u => u.Id == itemDTO.Seller).FirstOrDefault();
+                _logger.LogInformation($" [x] Received user with id: {user.Id}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while querying the user collection: {ex}");
+            }
+
             Category chairs = new Category
             {
                 CategoryCode = "CH",
@@ -84,6 +95,7 @@ public class ItemWorker : BackgroundService
             Item item = new Item
             {
                 Id = Guid.NewGuid(),
+                Seller = user,
                 Title = itemDTO.Title,
                 Brand = itemDTO.Brand,
                 Description = itemDTO.Description,
@@ -107,7 +119,10 @@ public class ItemWorker : BackgroundService
                 item.Category = rings;
             }
 
-            itemCollection.InsertOneAsync(item);
+            if (user != null)
+            {
+                itemCollection.InsertOneAsync(item);
+            }
         };
 
         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
