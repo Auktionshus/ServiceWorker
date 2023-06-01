@@ -99,11 +99,9 @@ public class BidWorker : BackgroundService
 
                 try
                 {
-                    auction.Bids.Add(bid);
-                    auction.CurrentPrice = bid.Amount;
-
                     var update = Builders<Auction>.Update
                         .Set(a => a.CurrentPrice, bid.Amount)
+                        .Set(a => a.HighestBidder, bid.Bidder)
                         .Push(a => a.Bids, bid);
 
                     auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
