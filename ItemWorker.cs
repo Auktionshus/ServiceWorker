@@ -47,7 +47,7 @@ public class ItemWorker : BackgroundService
             var message = Encoding.UTF8.GetString(body);
             var dbClient = new MongoClient(_mongoDbConnectionString);
             var itemCollection = dbClient.GetDatabase("Items").GetCollection<Item>("Item");
-            var userCollection = dbClient.GetDatabase("Users").GetCollection<User>("User");
+            var userCollection = dbClient.GetDatabase("User").GetCollection<User>("Users");
 
             _logger.LogInformation($" [x] Received {message}");
 
