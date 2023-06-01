@@ -106,12 +106,7 @@ public class BidWorker : BackgroundService
                         .Set(a => a.CurrentPrice, bid.Amount)
                         .Push(a => a.Bids, bid);
 
-                    var filter = Builders<Auction>.Filter.Eq(a => a.Id, bidDTO.Auction);
-                    auctionCollection.UpdateOne(
-                        filter,
-                        update,
-                        new UpdateOptions { IsUpsert = true }
-                    );
+                    auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
 
                     bidCollection.InsertOne(bid);
                 }

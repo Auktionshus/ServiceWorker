@@ -74,6 +74,7 @@ public class AuctionWorker : BackgroundService
                 EndTime = auctionDTO.EndTime,
                 StartingPrice = auctionDTO.StartingPrice,
                 CurrentPrice = auctionDTO.StartingPrice,
+                Bids = new List<Bid>()
             };
 
             if (item != null)
