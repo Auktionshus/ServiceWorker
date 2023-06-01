@@ -121,7 +121,14 @@ public class ItemWorker : BackgroundService
 
             if (user != null)
             {
-                itemCollection.InsertOneAsync(item);
+                try
+                {
+                    itemCollection.InsertOneAsync(item);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"An error occurred while querying the itemcollection: {ex}");
+                }
             }
         };
 
