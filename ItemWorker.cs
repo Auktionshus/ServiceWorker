@@ -90,24 +90,24 @@ public class ItemWorker : BackgroundService
                 Location = itemDTO.Location
             };
 
-            if (itemDTO.Category == "CH")
+            if (itemDTO.CategoryCode == "CH")
             {
                 item.Category = chairs;
             }
-            else if (itemDTO.Category == "LA")
+            else if (itemDTO.CategoryCode == "LA")
             {
                 item.Category = lamps;
             }
-            else if (itemDTO.Category == "CO")
+            else if (itemDTO.CategoryCode == "CO")
             {
                 item.Category = coins;
             }
-            else if (itemDTO.Category == "RI")
+            else if (itemDTO.CategoryCode == "RI")
             {
                 item.Category = rings;
             }
 
-            collection.InsertOneAsync(item);
+            itemCollection.InsertOneAsync(item);
         };
 
         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
