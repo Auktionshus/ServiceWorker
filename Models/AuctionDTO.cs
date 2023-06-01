@@ -8,5 +8,4 @@ public class AuctionDTO
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public decimal StartingPrice { get; set; }
-    public decimal CurrentPrice { get; set; }
 }
