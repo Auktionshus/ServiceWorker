@@ -51,8 +51,14 @@ public class AuctionWorker : BackgroundService
             _logger.LogInformation($" [x] Received {message}");
 
             var auction = JsonSerializer.Deserialize<Auction>(message);
-
-            collection.InsertOneAsync(auction);
+            try
+            {
+                collection.InsertOneAsync(auction);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while performing database operations: {ex}");
+            }
         };
 
         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);

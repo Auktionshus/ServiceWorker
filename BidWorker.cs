@@ -54,12 +54,27 @@ public class BidWorker : BackgroundService
             _logger.LogInformation($" [x] Received {message}");
 
             BidDTO? bidDTO = JsonSerializer.Deserialize<BidDTO>(message);
+            _logger.LogInformation(
+                $" [x] serialized message auction: {bidDTO.Auction}, bidder: {bidDTO.Bidder}, amount: {bidDTO.Amount}"
+            );
 
             Auction auction = auctionCollection.Find(a => a.Id == bidDTO.Auction).FirstOrDefault();
+            _logger.LogInformation($" [x] Received auction with id: {auction.Id}");
 
-            User user = userCollection.Find(u => u.Id == bidDTO.Bidder).FirstOrDefault();
-
-            if (auction != null && bidDTO.Amount <= auction.CurrentPrice)
+            User user = null;
+            try
+            {
+                user = userCollection.Find(u => u.Id == bidDTO.Bidder).FirstOrDefault();
+                _logger.LogInformation($" [x] Received user with id: {user.Id}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while querying the user collection: {ex}");
+            }
+            _logger.LogInformation(
+                $" [x] Bid amount: {bidDTO.Amount}, auction current price: {auction.CurrentPrice}"
+            );
+            if (auction != null && bidDTO.Amount > auction.CurrentPrice)
             {
                 if (auction.BidHistory == null)
                 {
@@ -71,17 +86,29 @@ public class BidWorker : BackgroundService
                     Bidder = user,
                     Id = Guid.NewGuid()
                 };
+                _logger.LogInformation(
+                    $" [x] Received bid with id: {bid.Id}, amount: {bid.Amount}, bidder: {bid.Bidder}"
+                );
 
-                auction.BidHistory.Add(bid);
-                auction.CurrentPrice = bid.Amount;
+                try
+                {
+                    auction.BidHistory.Add(bid);
+                    auction.CurrentPrice = bid.Amount;
 
-                var update = Builders<Auction>.Update
-                    .Set(a => a.CurrentPrice, bid.Amount)
-                    .Push(a => a.BidHistory, bid);
+                    var update = Builders<Auction>.Update
+                        .Set(a => a.CurrentPrice, bid.Amount)
+                        .Push(a => a.BidHistory, bid);
 
-                auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
+                    auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
 
-                bidCollection.InsertOne(bid);
+                    bidCollection.InsertOne(bid);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(
+                        $"An error occurred while performing database operations: {ex}"
+                    );
+                }
             }
             else
             {
