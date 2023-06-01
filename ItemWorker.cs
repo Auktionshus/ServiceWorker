@@ -46,13 +46,68 @@ public class ItemWorker : BackgroundService
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             var dbClient = new MongoClient(_mongoDbConnectionString);
-            var collection = dbClient.GetDatabase("Items").GetCollection<Item>("Item");
+            var itemCollection = dbClient.GetDatabase("Items").GetCollection<Item>("Item");
+            var userCollection = dbClient.GetDatabase("Users").GetCollection<User>("User");
 
             _logger.LogInformation($" [x] Received {message}");
 
-            var item = JsonSerializer.Deserialize<Item>(message);
+            var itemDTO = JsonSerializer.Deserialize<ItemDTO>(message);
 
-            collection.InsertOneAsync(item);
+            Category chairs = new Category
+            {
+                CategoryCode = "CH",
+                CategoryName = "Chairs",
+                CategoryDescription = "Something to sit on"
+            };
+
+            Category lamps = new Category
+            {
+                CategoryCode = "LA",
+                CategoryName = "Lamps",
+                CategoryDescription = "A Collection of lamps to brighten your life"
+            };
+
+            Category coins = new Category
+            {
+                CategoryCode = "CO",
+                CategoryName = "Coins",
+                CategoryDescription = "Moneyzz"
+            };
+
+            Category rings = new Category
+            {
+                CategoryCode = "RI",
+                CategoryName = "Rings",
+                CategoryDescription = "A collection of different types of rings"
+            };
+
+            Item item = new Item
+            {
+                Id = Guid.NewGuid(),
+                Title = itemDTO.Title,
+                Brand = itemDTO.Brand,
+                Description = itemDTO.Description,
+                Location = itemDTO.Location
+            };
+
+            if (itemDTO.CategoryCode == "CH")
+            {
+                item.Category = chairs;
+            }
+            else if (itemDTO.CategoryCode == "LA")
+            {
+                item.Category = lamps;
+            }
+            else if (itemDTO.CategoryCode == "CO")
+            {
+                item.Category = coins;
+            }
+            else if (itemDTO.CategoryCode == "RI")
+            {
+                item.Category = rings;
+            }
+
+            itemCollection.InsertOneAsync(item);
         };
 
         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
@@ -64,4 +119,3 @@ public class ItemWorker : BackgroundService
         }
     }
 }
-

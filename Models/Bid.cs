@@ -7,5 +7,5 @@ public class Bid
     public Guid Id { get; set; }
     public User Bidder { get; set; }
     public decimal Amount { get; set; }
-    public DateTime Date { get; set; } = DateTime.UtcNow;
+    public DateTime Date { get; set; }
 }

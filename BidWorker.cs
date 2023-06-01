@@ -76,9 +76,9 @@ public class BidWorker : BackgroundService
             );
             if (auction != null && bidDTO.Amount > auction.CurrentPrice)
             {
-                if (auction.BidHistory == null)
+                if (auction.Bids == null)
                 {
-                    auction.BidHistory = new List<Bid>();
+                    auction.Bids = new List<Bid>();
                 }
                 Bid bid = new Bid
                 {
@@ -92,12 +92,12 @@ public class BidWorker : BackgroundService
 
                 try
                 {
-                    auction.BidHistory.Add(bid);
+                    auction.Bids.Add(bid);
                     auction.CurrentPrice = bid.Amount;
 
                     var update = Builders<Auction>.Update
                         .Set(a => a.CurrentPrice, bid.Amount)
-                        .Push(a => a.BidHistory, bid);
+                        .Push(a => a.Bids, bid);
 
                     auctionCollection.UpdateOne(a => a.Id == bidDTO.Auction, update);
 
