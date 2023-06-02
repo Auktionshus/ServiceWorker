@@ -6,6 +6,9 @@ using VaultSharp.V1.AuthMethods;
 using VaultSharp.V1.AuthMethods.Token;
 using VaultSharp.V1.Commons;
 
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("init main");
+
 try
 {
     var EndPoint = "https://vault_dev:8201/";
@@ -43,23 +46,19 @@ try
     string? connectionString = MongoSecrets.Data.Data["ConnectionString"].ToString();
     logger.Info($"Connection String: {connectionString}");
     // Creates and EnviromentVariable object with a dictionary to contain the secrets
-    EnvVariables vaultSecrets = new EnvVariables
+    Environment secrets = new Environment
     {
-        dictionary = new Dictionary<string, string>
-        {
-            { "Secret", secret },
-            { "Issuer", issuer },
-            { "ConnectionURI", connectionURI }
-        }
+        dictionary = new Dictionary<string, string> { { "ConnectionString", connectionString } }
     };
 
     IHost host = Host.CreateDefaultBuilder(args)
         .ConfigureServices(services =>
         {
-            services.AddHostedService<Worker>();
-            // Adds the EnviromentVariable object to the project as a singleton.
-            // It can now be accessed wihtin the entire projekt
-            services.AddSingleton<EnvVariables>(vaultSecrets);
+            services.AddHostedService<ItemWorker>();
+            services.AddHostedService<AuctionWorker>();
+            services.AddHostedService<BidWorker>();
+
+            services.AddSingleton<Environment>(secrets);
         })
         .ConfigureLogging(logging =>
         {

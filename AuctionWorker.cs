@@ -14,7 +14,7 @@ public class AuctionWorker : BackgroundService
 
     private readonly string _mongoDbConnectionString;
 
-    public AuctionWorker(ILogger<AuctionWorker> logger, IConfiguration config)
+    public AuctionWorker(ILogger<AuctionWorker> logger, Environment secrets, IConfiguration config)
     {
         try
         {

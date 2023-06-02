@@ -14,7 +14,7 @@ public class ItemWorker : BackgroundService
 
     private readonly string _mongoDbConnectionString;
 
-    public ItemWorker(ILogger<ItemWorker> logger, IConfiguration config)
+    public ItemWorker(ILogger<ItemWorker> logger, Environment secrets, IConfiguration config)
     {
         try
         {
