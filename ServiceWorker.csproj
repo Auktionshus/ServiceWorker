@@ -4,8 +4,6 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-ServiceWorker-4ab0e19f-f182-40db-be64-53e2f0638596</UserSecretsId>
-
     <Company>Grøn og Olsen ApS</Company>
     <Authors>3M1N</Authors>
     <Copyright>2023 Eaaa 3M1N ApS</Copyright>
@@ -14,10 +12,13 @@
     <FileVersion>1.0.1.1</FileVersion>
     <InformationalVersion>1.0.0</InformationalVersion>
     <Description>
-      1.0.0 Updated with semantic versioning
-      0.9.2 Updated with NLog
-      0.9.1 Updated with RabbitMQ
-      0.9.0 Dockerfile Service Added to App
+      1.0.0 Updated with VaultSharp
+      0.6.0 Updated with semantic versioning
+      0.5.0 Updated with NLog
+      0.4.0 Updated with BidWorker
+      0.3.0 Updated with ItemWorker
+      0.2.0 Updated with AuctionWorker
+      0.1.0 Dockerfile Added to App
     </Description>
   </PropertyGroup>
 
