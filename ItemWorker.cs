@@ -16,10 +16,19 @@ public class ItemWorker : BackgroundService
 
     public ItemWorker(ILogger<ItemWorker> logger, IConfiguration config)
     {
-        _logger = logger;
-        _mongoDbConnectionString = config["MongoDbConnectionString"];
-        _hostName = config["HostnameRabbit"];
-        _logger.LogInformation($"Connection: {_hostName}");
+        try
+        {
+            _hostName = config["HostnameRabbit"];
+            _mongoDbConnectionString = secrets.dictionary["ConnectionString"];
+
+            _logger = logger;
+            _logger.LogInformation($"HostName: {_hostName}");
+            _logger.LogInformation($"MongoDbConnectionString: {_mongoDbConnectionString}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Error getting environment variables{e.Message}");
+        }
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
