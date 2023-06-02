@@ -45,7 +45,7 @@ try
 
     string? connectionString = MongoSecrets.Data.Data["ConnectionString"].ToString();
     logger.Info($"Connection String: {connectionString}");
-    // Creates and EnviromentVariable object with a dictionary to contain the secrets
+    // Creates and Enviroment object with a dictionary to contain the secrets
     Environment secrets = new Environment
     {
         dictionary = new Dictionary<string, string> { { "ConnectionString", connectionString } }
