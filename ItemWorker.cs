@@ -14,12 +14,21 @@ public class ItemWorker : BackgroundService
 
     private readonly string _mongoDbConnectionString;
 
-    public ItemWorker(ILogger<ItemWorker> logger, IConfiguration config)
+    public ItemWorker(ILogger<ItemWorker> logger, Environment secrets, IConfiguration config)
     {
-        _logger = logger;
-        _mongoDbConnectionString = config["MongoDbConnectionString"];
-        _hostName = config["HostnameRabbit"];
-        _logger.LogInformation($"Connection: {_hostName}");
+        try
+        {
+            _hostName = config["HostnameRabbit"];
+            _mongoDbConnectionString = secrets.dictionary["ConnectionString"];
+
+            _logger = logger;
+            _logger.LogInformation($"HostName: {_hostName}");
+            _logger.LogInformation($"MongoDbConnectionString: {_mongoDbConnectionString}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Error getting environment variables{e.Message}");
+        }
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
